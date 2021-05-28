@@ -1,39 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
 
-function App() {
-  // Create the count state.
-  const [count, setCount] = useState(0);
-  // Create the counter (+1 every second).
-  useEffect(() => {
-    const timer = setTimeout(() => setCount(count + 1), 1000);
-    return () => clearTimeout(timer);
-  }, [count, setCount]);
-  // Return the App component.
+// import "./styles.css";
+
+export default function App() {
+  let data = [
+    {
+      p_id: 1,
+      p_name: "isco",
+      isChecked: true
+    },
+    {
+      p_id: 2,
+      p_name: "david",
+      isChecked: false
+    }
+  ];
+
+  const [dataForm, setDataForm] = useState(data);
+
+  const changeCheck = (id) => {
+    console.log(id);
+    let temp = [...dataForm];
+    const index = temp.findIndex((x) => x.p_id === id);
+    if (index === -1) return;
+    temp[index].isChecked = !temp[index].isChecked;
+    setDataForm(temp);
+  };
+
+  const handleSubmit = () => {
+    console.log(`{"data":` + JSON.stringify(dataForm) + `}`);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <p>
-          Page has been open for <code>{count}</code> seconds.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
+      <form>
+        {dataForm.map((li, index) => (
+          <div key={index}>
+            <input
+              type="checkbox"
+              checked={li.isChecked}
+              onChange={() => {
+                changeCheck(li.p_id);
+              }}
+            />
+            <label htmlFor={li.p_name}>{li.p_name}</label>
+          </div>
+        ))}
+        <button type="button" onClick={handleSubmit}>
+          Submit
+        </button>
+      </form>
     </div>
   );
 }
-
-export default App;
